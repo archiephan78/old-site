@@ -1,0 +1,27 @@
+---
+layout: default
+---
+
+<article id="post__content">
+  <h1 id="post__title" data-identifier="{{ page.date | date: "%Y%m%d" }}">{{ page.title }}</h1>
+  <div id="post__date">{{ page.date | date: "%Y-%m-%d" }}</div>
+  <declare id="declare" class="declare">
+    <hr/> The authorization method used in all articles in this blog is <b>Free reprint - non-commercial - non-derivative - keep signature.</b>
+    Please be sure to indicate the source, thank you.<br>
+    Disclaimer:<br>
+    This blog is welcome to forward, but please keep the original author information!<br>
+    Facebook: <a href="https://www.facebook.com/chungphan78">@chungpht</a>;<br>
+    Blog address: <a href="https://botranvan.github.io">Archie's personal blog</a>;<br>
+    Content is my study, research and summary, if there are similarities, it is an honor!
+    <hr/>
+  </declare>
+  {{ content }}
+</article>
+<!-- end #post__content -->
+
+<h2 id="post__discuss">Discuss</h2>
+<img src="/images/like.jpeg" alt="Appreciation" class="image-center">
+
+<h2 id="post__discuss">Review pre-post</h2>
+{% include disqus.html %}
+{% include share.html %}

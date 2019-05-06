@@ -1,0 +1,58 @@
+# Site settings
+title: Ministry's personal blog
+email: tranbo9xnd@gmail.com
+description: My blog
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://botranvan.github.io/index.html" # the base hostname & protocol for your site
+
+# Paginate
+#gems: [jekyll-paginate]
+# Number of post on per page.
+#paginate: 10
+#paginate_path: "page:num"
+
+
+# Build settings
+# markdown
+#highlighter: pygments
+# markdown compile
+#markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+#relative_permalinks: true
+# type of link for post on blog
+permalink: /:year-:month-:day-:title.html
+
+favicon: /assets/image/favicon.ico
+
+# Information
+author:
+  name: Bo Tran
+  email: tranbo9xnd@gmail.com
+  link: http://botranvan.github.io/
+  facebook: http://facebook.com/Ministry.Nd
+  facebook_username: Ministry.Nd
+  github: https://github.com/botranvan
+  github_username: botranvan
+
+
+locals:
+  tags: tags
+  about: about
+  active: tech
+subscribe_rss: /pages/atom.xml
+
+# Avatar
+avatar: /assets/image/avatar.png
+# CSS
+css: /assets/css/
+# Javascript
+js: /assets/js/
+# Images
+image: /assets/image/
+
+# disqus setting
+disqus:
+  shortname: botranvan
