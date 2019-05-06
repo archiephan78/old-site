@@ -1,6 +1,6 @@
 ---
 layout: page
-title: You can't save the world alone - Archie's Technology blog
+title: You can't save the world alone!
 ---
 ---
 

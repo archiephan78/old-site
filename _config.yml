@@ -1,9 +1,9 @@
 # Site settings
-title: Ministry's personal blog
-email: tranbo9xnd@gmail.com
-description: My blog
+title: Archie's personal blog
+email: chungphan78@gmail.com
+description: Tech blog
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://botranvan.github.io/index.html" # the base hostname & protocol for your site
+url: "http://chungpt78.github.io/index.html" # the base hostname & protocol for your site
 
 # Paginate
 #gems: [jekyll-paginate]
@@ -29,13 +29,13 @@ favicon: /assets/image/favicon.ico
 
 # Information
 author:
-  name: Bo Tran
-  email: tranbo9xnd@gmail.com
-  link: http://botranvan.github.io/
-  facebook: http://facebook.com/Ministry.Nd
-  facebook_username: Ministry.Nd
-  github: https://github.com/botranvan
-  github_username: botranvan
+  name: Archie Phan
+  email: chungphan78@gmail.com
+  link: http://chungpt78.github.io/
+  facebook: http://facebook.com/chungphan78
+  facebook_username: chungphan
+  github: https://github.com/chungpt78
+  github_username: chungphan
 
 
 locals:
@@ -55,4 +55,4 @@ image: /assets/image/
 
 # disqus setting
 disqus:
-  shortname: botranvan
+  shortname: chungphan
