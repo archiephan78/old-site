@@ -45,7 +45,7 @@ locals:
 subscribe_rss: /pages/atom.xml
 
 # Avatar
-avatar: /assets/image/avatar.png
+avatar: /assets/image/avatar.jpg
 # CSS
 css: /assets/css/
 # Javascript

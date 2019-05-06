@@ -11,7 +11,6 @@ Contact information:
 
 - Facebook: [Chunng Thanh Phan](https://www.facebook.com/chungphan78)
 - Email: <chungphan7819@gmail.com>
-- Tumblr: https://space.chungphan.net/
-- Telegram: @chungpht
+- Telegram: <@chungpht>
 ---
 {% include disqus.html %}
