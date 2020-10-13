@@ -56,3 +56,5 @@ image: /assets/image/
 # disqus setting
 disqus:
   shortname: chungphan
+
+theme: jekyll-theme-merlot
