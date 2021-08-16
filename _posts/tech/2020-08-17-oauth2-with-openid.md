@@ -28,7 +28,8 @@ category: tech
 
 ### Abstract flow:
 
-![](/images/tech-image/2020-08-17-oauth2-with-openid/abstract_flow.png)
+![](images/2020-08-17-oauth2-with-openid/abstract_flow.png)
+
 
 
 
