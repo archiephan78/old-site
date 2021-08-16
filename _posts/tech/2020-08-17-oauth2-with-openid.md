@@ -1,6 +1,6 @@
 ---
 layout: post
-title: title
+title: OAuth2 với OpenID
 category: tech
 ---
 ---
@@ -29,8 +29,6 @@ category: tech
 
 ### Abstract flow:
 
-![](images/2020-08-17-oauth2-with-openid/abstract_flow.png)
-
-
+![](images/2020-08-17-oauth2/abstract_flow.png)
 
 
