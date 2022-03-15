@@ -36,3 +36,48 @@ category: Technique
 
 ![](images/2022-02-27-microservice/2.png)
 
+- Với <b>Microservice architecture </b> thấy được những lợi ích rõ rệt:
+
+    - Việc áp dụng quy trình CI/CD trở nên dễ dàng
+        + Khả năng maintain, update từng service dễ dàng
+        + Better testability - services are smaller and faster to test
+        + Better deployability - services can be deployed independently
+        + Tăng khả năng làm việc độc lập của các team
+    - Mỗi microservice rất nhỏ:
+        + Dễ dàng cho các developer đọc và hiểu cách service hoạt động
+        + Speeds up deployments
+    - Improved fault isolation
+    - Eliminates any long-term commitment to a technology stack.
+
+- Tuy nhiên vẫn có những mặt hạn chế:
+
+    - Hệ thống phức tạp, các developers phải tốn nhiều effort về việc community giữa các service
+    - Độ phức tạp khi triển khai và  quản trị, monitor các microservice trên production
+    - Theo nguyên tắc CAP (CAP theorem) thì giao dịch phân tán sẽ không thể thỏa mãn cả 3 điều kiện: consistency (dữ liệu ở điểm khác nhau trong mạng phải giống nhau), availablity (yêu cầu gửi đi phải có ressponse), partition tolerance (hệ thống vẫn hoạt động được ngay cả khi mạng bị lỗi). Những công nghệ cơ sở dữ liệu phi quan hệ (NoSQL) hay môi giới thông điệp (message broker) tốt nhất hiện nay cũng chưa vượt qua nguyên tắc CAP
+
+## Microservices patterns
+
+- Hiện nay có rất nhiều pattern liên quan đến microservice pattern, các pattern giải quyết các vấn đề mà các kỹ sư sẽ gặp phải khi triển khai kiến trúc microservice. Các pattern được chia thành 3 loại patterns : 
+    - <b>Infrastructure patterns </b> - những loại patterns liên quan đến việc triển khai hạ tầng 
+    - <b>Application Infrastructure patterns </b> - những loại patterns liên quan đến việc triển khai, theo dõi hạ tầng cho ứng dụng (message queue, loging, montoring,..)
+    - <b>Application patterns </b> - những pattern liên quan đến việc develop service
+
+![](images/2022-02-27-microservice/3.png)
+
+### Infrastructure patterns
+
+- Service deployment platform : sử dụng các nền tảng deployment platform như docker swarm, k8s, aws lambda,..
+    + Serverless Deployment: với serverless thì developer không cần takecare phần hạ tầng
+    + Service instance per container: các service được đóng gói trong container và mỗi container chưa 1 service
+    + Service Instance per VM: package  service là 1 virtual machine image và deploy  service là 1 hoặc nhiều instance. Ví dụ như Netflix package service của họ thành EC2 AMI và triển khai mỗi service gồm rất nhiều instance. Ở pattern này có 2 pattern khác nhau là <b> Single Service Instance per Host </b> và <b> Multiple service instances per host </b>
+
+- Service mesh: là 1 pattern sủ dụng <a href="https://viblo.asia/p/tim-hieu-ve-service-mesh-LzD5dWaWljY"> service mesh </a> để làm trung gian việc community giữa các service.
+- Sidecar: Implement cross-cutting concerns in a sidecar process or container that runs alongside the service instance
+- Server-side service discovery:  client/API gateway sẽ gửi một request đến một component (ví dụ như một load balancer) chạy trên một location đã biết. Component đó sẽ gọi đến service registry và xác địh vị trí location mà request cần đến.
+- Client-side service discovery: client hoặc API-gateway sẽ có được vị trí của một service instance bằng cách truy vấn một service registry.
+- Service registry: là nơi để chứa các metadata của các microservice instances (bao gồm vị trí location, host port,…). Các microservice instance được đăng ký với service registry khi khởi động và sẽ hủy đăng ký khi bị shut down. Các thành phần khác cần tìm thông tin của một microservice nào đó thì sẽ tìm thông qua service registry.
+- API-Gateway: API-Gateway cho phép bạn sử dụng API được quản lý qua REST/HTTP. Do đó, bạn có thể expose các business functions của mình được triển khai dưới dạng microservice thông qua API-Gateway dưới dạng một API được quản lý.
+
+### Application Infrastructure patterns
+
+- Microservice chassis, Service Template: chassis là 1 khung các service base mà có thể sử dụng lại ở nhiều service khác nhau (ví dụ Security, logging, configuration, metric, tracing,...) gọi chung là generic cross-cutting concerns.
