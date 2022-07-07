@@ -9,6 +9,8 @@ category: Technique
 
 CSI - **Container Storage Interface**
 
+![](images/2022-05-31-cinder-csi/OpenStack_Cinder_CSI_Plugin.png)
+
 - Cinder CSI Spec :
     - Controller Plugin: is Deployment run on K8S
     - Node Plugin  : is K8S daemonset operates on all Worker Nodes
