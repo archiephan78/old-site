@@ -7,6 +7,8 @@ category: Technique
 
 # VictoriaMetrics operator on K8S 
 
+![](images\2022-06-11-vms-operator\vms-k8s.drawio.png)
+
 - In previous section i deployed VMs cluster on K8S with Helm. In this part i will using VictoriaMetrics on K8S with VMs operator
 
 - Design and implementation inspired by prometheus-operator. It's great a tool for managing monitoring configuration of your applications. VictoriaMetrics operator has api capability with it. So you can use familiar CRD objects: ServiceMonitor, PodMonitor, PrometheusRule and Probe. Or you can use VictoriaMetrics CRDs:
@@ -224,7 +226,7 @@ vmselect-example-vmcluster-persistent            3h55m
 vmstorage-example-vmcluster-persistent           3h56m
 ```
 
-- I create more some example rule scrape for vmagent:
+- scapre metric from kube-state-metrics
 
 ```yaml
 cat << EOF | kubectl apply -f -
@@ -241,7 +243,6 @@ EOF
 - Checking on vmui UI for new metric scrape:
 
 ![](images/2022-06-11-vms-operator/vmui.png)
-
 
 -  kube-cadvisor-metrics
 
@@ -287,6 +288,7 @@ spec:
       replacement: '${1}'
 EOF
 ```
+- I create more some example rule scrape for vmagent if you dont want use kube-state-metrics, becareful with `${1}` variable in manifest, it maybe missing if you run in bash shell
 
 - kubernetes-apiservers
 
@@ -314,7 +316,7 @@ spec:
 EOF
 ```
 
-- kube-nodes
+- kube-nodes *
 
 ```yaml
 cat << EOF | kubectl apply -f -
@@ -325,18 +327,149 @@ metadata:
 spec:
   scheme: https
   tlsConfig:
-        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        insecure_skip_verify: true
-      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-      kubernetes_sd_configs:
-        - role: node
-      relabel_configs:
-        - action: labelmap
-          regex: __meta_kubernetes_node_label_(.+)
-        - target_label: __address__
-          replacement: kubernetes.default.svc:443
-        - source_labels: [__meta_kubernetes_node_name]
-          regex: (.+)
-          target_label: __metrics_path__
-          replacement: /api/v1/nodes/$1/proxy/metrics
+    caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    insecureSkipVerify: true
+  bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+  relabelConfigs:
+    - action: labelmap
+      regex: __meta_kubernetes_node_label_(.+)
+    - targetLabel: __address__
+      replacement: kubernetes.default.svc:443
+    - sourceLabels: [__meta_kubernetes_node_name]
+      regex: (.+)
+      targetLabel: __metrics_path__
+      replacement: /api/v1/nodes/${1}/proxy/metrics
+EOF
 ```
+- kubernetes-service-endpoints 
+
+```yaml
+cat << EOF | kubectl apply -f -
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: kubernetes-service-endpoints
+spec:
+  endpoints:
+    - port: https
+      relabelConfigs:
+        - action: drop
+          sourceLabels: [__meta_kubernetes_pod_container_init]
+        - action: keep_if_equal
+          sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number]
+        - sourceLabels:
+            [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+          action: keep
+        - sourceLabels:
+            [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+          action: replace
+          targetLabel: __scheme__
+          regex: (https?)
+        - sourceLabels:
+            [__meta_kubernetes_service_annotation_prometheus_io_path]
+          action: replace
+          targetLabel: __metrics_path__
+          regex: (.+)
+        - sourceLabels:
+            [
+              __address__,
+              __meta_kubernetes_service_annotation_prometheus_io_port,
+            ]
+          action: replace
+          targetLabel: __address__
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+)
+        - sourceLabels: [__meta_kubernetes_namespace]
+          action: replace
+          targetLabel: kubernetes_namespace
+        - sourceLabels: [__meta_kubernetes_service_name]
+          action: replace
+          targetLabel: kubernetes_name
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          action: replace
+          targetLabel: kubernetes_node
+EOF
+```
+
+- kubernetes-service-endpoints-slow
+
+```yaml
+cat << EOF | kubectl apply -f -
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: kubernetes-service-endpoints-slow
+spec:
+  endpoints:
+    - port: https
+      relabelConfigs:
+        - action: drop
+          sourceLabels: [__meta_kubernetes_pod_container_init]
+        - action: keep_if_equal
+          sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number]
+        - sourceLabels:
+            [__meta_kubernetes_service_annotation_prometheus_io_scrape_slow]
+          action: keep
+        - sourceLabels:
+            [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+          action: replace
+          targetLabel: __scheme__
+          regex: (https?)
+        - sourceLabels:
+            [__meta_kubernetes_service_annotation_prometheus_io_path]
+          action: replace
+          targetLabel: __metrics_path__
+          regex: (.+)
+        - sourceLabels:
+            [
+              __address__,
+              __meta_kubernetes_service_annotation_prometheus_io_port,
+            ]
+          action: replace
+          targetLabel: __address__
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+)
+        - sourceLabels: [__meta_kubernetes_namespace]
+          action: replace
+          targetLabel: kubernetes_namespace
+        - sourceLabels: [__meta_kubernetes_service_name]
+          action: replace
+          targetLabel: kubernetes_name
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          action: replace
+          targetLabel: kubernetes_node
+EOF
+```
+
+- because i deploy node exxpoter on ns default so i create this rule for scrape node-expoter metrics
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: pod-scrape-default
+spec:
+  podMetricsEndpoints:
+    - port: metrics
+      scheme: http
+      targetPort: metrics
+      path: /metrics
+      interval: 20s
+      scrapeTimeout: 2s
+      honorLabels: false
+      honorTimestamps: false
+      relabelConfigs:
+        - sourceLabels: [ "__address__" ]
+          targetLabel: addr
+      metricRelabelConfigs:
+        - sourceLabels: [ "__address__" ]
+          targetLabel: addr
+  namespaceSelector:
+    any: false
+    matchNames: ['default']
+```
+
