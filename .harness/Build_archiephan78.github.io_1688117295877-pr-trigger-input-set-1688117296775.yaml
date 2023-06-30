@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_archiephan78.github.io_1688117295877-pr-trigger-input-set
+  identifier: Build_archiephan78githubio_1688117295877prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: ssi
+  pipeline:
+    identifier: Build_archiephan78.github.io_1688117295877
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
