@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_archiephan78.github.io_1688117295877-push-trigger-input-set
+  identifier: Build_archiephan78githubio_1688117295877pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: ssi
+  pipeline:
+    identifier: Build_archiephan78.github.io_1688117295877
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
