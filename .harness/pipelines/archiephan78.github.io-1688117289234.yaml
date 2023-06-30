@@ -1,0 +1,33 @@
+pipeline:
+  identifier: Build_archiephan78.github.io_1688117295877
+  name: Build archiephan78.github.io
+  orgIdentifier: default
+  projectIdentifier: ssi
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.Github_OAuth_1688117276558
+        repoName: archiephan78/archiephan78.github.io
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: echo
+                  name: echo
+                  spec:
+                    command: echo hello world
+                  timeout: ""
+                  type: Run
+          platform:
+            arch: Amd64
+            os: Linux
+          runtime:
+            spec: {}
+            type: Cloud
+        type: CI
